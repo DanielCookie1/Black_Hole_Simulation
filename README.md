@@ -18,6 +18,12 @@ _work-in-progress_
 $ ninja
 ```
 
+or
+
+```
+$ gcc -lraylib main.c -o main
+```
+
 ## Run
 
 ```
