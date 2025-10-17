@@ -20,8 +20,6 @@ $ ninja
 
 ## Run
 
-Run:
-
 ```
 ./main
 ```
