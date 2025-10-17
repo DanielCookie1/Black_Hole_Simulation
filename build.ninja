@@ -1,0 +1,8 @@
+cc = gcc
+cflags = -Wall -lraylib
+
+rule cc
+ command = $cc $cflags $in -o $out
+ description = Build $in into $out
+
+build main: cc main.c
