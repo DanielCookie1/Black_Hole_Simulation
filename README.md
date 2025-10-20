@@ -21,7 +21,7 @@ $ ninja
 or
 
 ```
-$ gcc -lraylib main.c -o main
+$ gcc -lm -lraylib main.c -o main
 ```
 
 ## Run
