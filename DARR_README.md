@@ -14,7 +14,7 @@ The `da_t` type contains the following fields:
 - `elem_sz`: size of array element.
 - `data`: void pointer to memory array.
 
-The initially-allocated capacity is *twice* the initial user-specified length.
+The initially-allocated capacity is *one times* the initial user-specified length.
 After running out of capacity, a new array of *twice* the current capacity is allocated
 and all the elements are copied over.
 
