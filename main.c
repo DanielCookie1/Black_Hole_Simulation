@@ -27,6 +27,7 @@
 #define get_xpos(radius, phase) ((cos(phase) * (radius)) + Body_XPos)
 #define get_ypos(radius, phase) ((sin(phase) * (radius)) + Body_YPos)
 
+// Schwarzschild metric
 #define geodesic_ddrad(rad, dphi) ((rad) * (dphi) * (dphi) - (Light_Speed * Light_Speed * Sch_Radius) / (2.0 * (rad) * (rad)))
 #define geodesic_ddphi(rad, drad, dphi) (-(2.0 / (rad)) * (drad) * (dphi))
 
@@ -124,26 +125,66 @@ void ray_update_pos(ray_t *ray, double lambda_step) {
 
 	ray->trail_len += 1;
 
-	// ddrad and ddphi found through geodesic equations
-	const double rad = ray->rad;
-	// const double phi = ray->phi;
-	const double drad = ray->drad;
-	const double dphi = ray->dphi;
-	const double ddrad = geodesic_ddrad(rad, dphi);
-	const double ddphi = geodesic_ddphi(rad, drad, dphi);
-	ray->drad += ddrad * lambda_step;
-	ray->dphi += ddphi * lambda_step;
-	ray->rad += ray->drad * lambda_step;
-	ray->phi += ray->dphi * lambda_step;
+	// RK4
+	// @DAN: Switch to vector state based implementation would clean up things?
+	{
+		// ddrad and ddphi found through geodesic equations
+		const double rad = ray->rad;
+		// const double phi = ray->phi;
+		const double drad = ray->drad;
+		const double dphi = ray->dphi;
+
+		const double one_sixth = 1.0/6.0;
+		const double half_lambda_step = 0.5 * lambda_step;
+
+		double rad_temp, drad_temp,
+			// phi_temp,
+			dphi_temp;
+
+		const double k1_rad  = drad;
+		const double k1_phi  = dphi;
+		const double k1_drad = geodesic_ddrad(rad, dphi);
+		const double k1_dphi = geodesic_ddphi(rad, drad, dphi);
+
+		rad_temp  = rad  + half_lambda_step * k1_rad;
+		// phi_temp  = phi  + half_lambda_step * k1_phi;
+		drad_temp = drad + half_lambda_step * k1_drad;
+		dphi_temp = dphi + half_lambda_step * k1_dphi;
+
+		const double k2_rad  = drad_temp;
+		const double k2_phi  = dphi_temp;
+		const double k2_drad = geodesic_ddrad(rad_temp, dphi_temp);
+		const double k2_dphi = geodesic_ddphi(rad_temp, drad_temp, dphi_temp);
+
+		rad_temp  = rad  + half_lambda_step * k2_rad;
+		// phi_temp  = phi  + half_lambda_step * k2_phi;
+		drad_temp = drad + half_lambda_step * k2_drad;
+		dphi_temp = dphi + half_lambda_step * k2_dphi;
+
+		const double k3_rad  = drad_temp;
+		const double k3_phi  = dphi_temp;
+		const double k3_drad = geodesic_ddrad(rad_temp, dphi_temp);
+		const double k3_dphi = geodesic_ddphi(rad_temp, drad_temp, dphi_temp);
+
+		rad_temp  = rad  + lambda_step * k3_rad;
+		// phi_temp  = phi  + lambda_step * k3_phi;
+		drad_temp = drad + lambda_step * k3_drad;
+		dphi_temp = dphi + lambda_step * k3_dphi;
+
+		const double k4_rad  = drad_temp;
+		const double k4_phi  = dphi_temp;
+		const double k4_drad = geodesic_ddrad(rad_temp, dphi_temp);
+		const double k4_dphi = geodesic_ddphi(rad_temp, drad_temp, dphi_temp);
+
+		ray->rad  += one_sixth * lambda_step * ((k1_rad  + k4_rad)  + 2 * (k2_rad  + k3_rad));
+		ray->phi  += one_sixth * lambda_step * ((k1_phi  + k4_phi)  + 2 * (k2_phi  + k3_phi));
+		ray->drad += one_sixth * lambda_step * ((k1_drad + k4_drad) + 2 * (k2_drad + k3_drad));
+		ray->dphi += one_sixth * lambda_step * ((k1_dphi + k4_dphi) + 2 * (k2_dphi + k3_dphi));
+	}
+
 	ray->x = get_xpos(ray->rad, ray->phi);
 	ray->y = get_ypos(ray->rad, ray->phi);
-
-	// ray->x += ray->dir.x * Light_Speed;
-	// ray->y += ray->dir.y * Light_Speed;
-	// ray->rad = get_radius(ray->x, ray->y);
-	// ray->phi = get_phase(ray->x, ray->y);
 }
-
 
 int main() {
 	// For ray trails, create huge pool
