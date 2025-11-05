@@ -1,0 +1,7 @@
+CC = gcc
+CFLAGS = -Wall -lm
+LDLIBS = -lraylib
+
+main: main.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
+
