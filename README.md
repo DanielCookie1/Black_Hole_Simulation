@@ -26,6 +26,8 @@ or
 $ gcc -lm -lraylib main.c -o main
 ```
 
+Equivalent makefiles are also included.
+
 ## Build with statically linked library
 
 - Make an empty directory called `raylib`.
@@ -43,6 +45,8 @@ or
 ```
 $ gcc -lm -Iraylib/include main.c raylib/lib/libraylib.a -o main
 ```
+
+Equivalent makefiles are also included.
 
 ## Run
 
