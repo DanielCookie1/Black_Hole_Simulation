@@ -1,5 +1,6 @@
 cc = gcc
-cflags = -Wall -lm -Iraylib/include
+cflags = -Wall -lm -Iraylib/include # for Linux
+#cflags = -Wall -Iraylib/include -framework Cocoa -framework IOKit -framework CoreVideo # for MacOS
 
 rule cc
  command = $cc $cflags $in -o $out

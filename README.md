@@ -53,3 +53,8 @@ Equivalent makefiles are also included.
 ```
 ./main
 ```
+
+## Other notes
+
+If you use MacOS, comment and uncomment the indicated lines in the makefile or the ninja file.
+This enables some additional flags required for the C compiler.

@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -Wall -lm
-LDLIBS = -lraylib
+CFLAGS = -Wall -lm -lraylib # For Linux
+#CFLAGS = -Wall -lraylib -framework Cocoa -framework IOKit -framework CoreVideo # for MacOS
 
 main: main.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
+	$(CC) $(CFLAGS) $< -o $@
 
