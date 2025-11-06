@@ -1,6 +1,8 @@
 CC = gcc
-CFLAGS = -Wall -lm -lraylib # For Linux
-#CFLAGS = -Wall -lraylib -framework Cocoa -framework IOKit -framework CoreVideo # for MacOS
+# For Linux
+CFLAGS = -Wall -lm -lraylib
+# For MacOS
+#CFLAGS = -Wall -lraylib -framework Cocoa -framework IOKit -framework CoreVideo
 
 main: main.c
 	$(CC) $(CFLAGS) $< -o $@
